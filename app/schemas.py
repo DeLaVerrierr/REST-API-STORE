@@ -19,6 +19,6 @@ class UserModel(BaseModel):
 
 
 class UpdateUserProfileRequest(BaseModel):
-    name: str
-    surname: str
-    phone_number: str
+    name: str = None
+    surname: str = None
+    phone_number: str = None
