@@ -5,15 +5,33 @@ from sqlalchemy.orm import Session
 
 from authentication.security import hash_password, generate_token, token_verification, extract_token
 from logger.logger import logger
-from database.models import User, Token
+from database.models import User, Token, Item
 from database.schemas import RegisterUserRequest, UpdateUserProfileRequest
 from fastapi import APIRouter
 from database.database import get_db
 
 router = APIRouter()
 
+#Работает
 
-@router.post('/user', summary='CreateUser', response_model=dict, tags=['User'])
+# {
+#     "name":"TEST2",
+#     "surname":"TEST",
+#     "phone_number":"+79178974996",
+#     "password":"li2222"
+# }
+
+# {
+#     "message": "User successfully created",
+#     "id": 5,
+#     "name": "Олег",
+#     "surname": "Дубков",
+#     "phone_number": "+79178878767",
+#     "token": "oc6fH5iMlk2affuja-fOU_sEHqSKXW8mAupY6jSgd64"
+# }
+
+
+@router.post('/create', summary='CreateUser', response_model=dict, tags=['User'])
 def create_user(user: RegisterUserRequest, db: Session = Depends(get_db)):
     """
     POST
@@ -53,25 +71,59 @@ def create_user(user: RegisterUserRequest, db: Session = Depends(get_db)):
     return response_data
 
 
-# Токен UsKO7S4tYmQK6NZ3vuE_QFFHJIZk_xgbIZ0FtzRKYr0
 
-@router.get('/api/v1/store/user/profile', summary='ProfileUser', response_model=dict, tags=['User'])
+
+@router.get('/profile', summary='ProfileUser', response_model=dict, tags=['User'])
 def get_user_profile(authorization: str = Header(...), db: Session = Depends(get_db)):
     """
     GET
     Профиль пользователя
     """
     user = token_verification(extract_token(authorization), db)
+
+    cart_items = []
+
+    if user.cart:
+        item_quantities = {}
+        total_price = 0
+
+        for cart in user.cart:
+            item_id = cart.item_id
+
+            if item_id in item_quantities:
+                item_quantities[item_id] += cart.quantity
+            else:
+                item_quantities[item_id] = cart.quantity
+
+        for item_id, quantity in item_quantities.items():
+            item = (
+                db.query(Item)
+                .filter(Item.id == item_id)
+                .first()
+            )
+            if item:
+                item_info = {
+                    "item_id": item_id,
+                    "quantity": quantity,
+                    "name": item.name,
+                    "price": item.price
+                }
+                cart_items.append(item_info)
+
+                total_price += item.price * quantity
+
     response_message = {
         "id": user.id,
         "name": user.name,
         "surname": user.surname,
-        "phone_number": user.phone_number
+        "phone_number": user.phone_number,
+        "cart": cart_items,
+        "total_price": total_price
     }
     return response_message
 
 
-@router.put('/api/v1/store/user/update-profile', summary='UpdateProfileUser', response_model=dict, tags=['User'])
+@router.put('/update-profile', summary='UpdateProfileUser', response_model=dict, tags=['User'])
 def update_user_profile(update_data: UpdateUserProfileRequest, authorization: str = Header(...),
                         db: Session = Depends(get_db)):
     """
