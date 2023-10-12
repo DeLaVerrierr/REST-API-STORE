@@ -1,2 +1,8 @@
 2023-10-11 18:17:45,876 - main - INFO - POST /api/v1/store/user Users created id:1,name:Amir,surname:Garaev,phone_number:+79178974996
 2023-10-12 12:28:02,944 - logger.logger - INFO - POST /api/v1/store/user Users created id:3,name:TEST,surname:TEST,phone_number:+79178974996
+2023-10-12 13:03:44,056 - logger.logger - INFO - POST /api/v1/store/user Users created id:4,name:TEST2,surname:TEST,phone_number:+79178974996
+2023-10-12 13:05:56,924 - logger.logger - INFO - POST /api/v1/store/item Item created id:1,name:item1,price:10,description:123fdsfdsdfsdfss
+2023-10-12 13:40:11,595 - logger.logger - INFO - POST /api/v1/store/item Item created id:2,name:item2,price:10,description:sdfgdsgsgds
+2023-10-12 13:41:51,132 - logger.logger - INFO - POST /api/v1/store/item Item created id:3,name:item3,price:50,description:sdfsdfsdfsfgsgds
+2023-10-12 13:47:15,457 - logger.logger - INFO - POST /api/v1/store/item Item created id:4,name:item4,price:500,description:sdfsddasfsdfsfgsgds
+2023-10-12 14:36:42,847 - logger.logger - INFO - POST /api/v1/store/item Item created id:6,name:item5,price:100,description:fdfd‡‚˚‡‚˚‚fdd‡˚

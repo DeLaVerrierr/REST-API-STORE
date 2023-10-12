@@ -2,7 +2,7 @@ import secrets
 
 import bcrypt
 from sqlalchemy.orm import Session
-
+from fastapi import HTTPException
 from database.models import Token, User
 
 
@@ -40,3 +40,11 @@ def extract_token(authorization: str) -> str:
     if authorization.startswith('Bearer '):
         return authorization[7:]
     return authorization
+
+def check_admin_authorization(authorization: str, db: Session) -> None:
+    user = token_verification(extract_token(authorization), db)
+    if isinstance(user, User):
+        if user.status != 'admin':
+            raise HTTPException(status_code=403, detail="Access denied. User is not an admin")
+    else:
+        raise HTTPException(status_code=403, detail=user['error'])

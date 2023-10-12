@@ -12,8 +12,17 @@ from database.database import get_db
 
 router = APIRouter()
 
+#Работает
 
-@router.post('/user', summary='CreateUser', response_model=dict, tags=['User'])
+# {
+#     "name":"TEST2",
+#     "surname":"TEST",
+#     "phone_number":"+79178974996",
+#     "password":"li2222"
+# }
+
+
+@router.post('/create', summary='CreateUser', response_model=dict, tags=['User'])
 def create_user(user: RegisterUserRequest, db: Session = Depends(get_db)):
     """
     POST
@@ -55,7 +64,7 @@ def create_user(user: RegisterUserRequest, db: Session = Depends(get_db)):
 
 # Токен UsKO7S4tYmQK6NZ3vuE_QFFHJIZk_xgbIZ0FtzRKYr0
 
-@router.get('/api/v1/store/user/profile', summary='ProfileUser', response_model=dict, tags=['User'])
+@router.get('/profile', summary='ProfileUser', response_model=dict, tags=['User'])
 def get_user_profile(authorization: str = Header(...), db: Session = Depends(get_db)):
     """
     GET
@@ -71,7 +80,7 @@ def get_user_profile(authorization: str = Header(...), db: Session = Depends(get
     return response_message
 
 
-@router.put('/api/v1/store/user/update-profile', summary='UpdateProfileUser', response_model=dict, tags=['User'])
+@router.put('/update-profile', summary='UpdateProfileUser', response_model=dict, tags=['User'])
 def update_user_profile(update_data: UpdateUserProfileRequest, authorization: str = Header(...),
                         db: Session = Depends(get_db)):
     """

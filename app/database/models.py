@@ -20,6 +20,7 @@ class User(Base):
 
     tokens = relationship("Token", back_populates="user")
 
+
 class Token(Base):
     __tablename__ = 'Tokens'
 
@@ -37,3 +38,14 @@ class Item(Base):
     name = Column(String, unique=True, index=True)
     price = Column(Integer, index=True)
     description = Column(String, unique=True, index=True)
+    category_id = Column(Integer, ForeignKey('Categories.id'))
+
+    category = relationship("Category", back_populates="items")
+
+class Category(Base):
+    __tablename__ = 'Categories'
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+
+    items = relationship("Item", back_populates="category")

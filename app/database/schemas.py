@@ -23,7 +23,25 @@ class UpdateUserProfileRequest(BaseModel):
     surname: str = None
     phone_number: str = None
 
-class Item(BaseModel):
+
+class CreateItem(BaseModel):
     name: str
     price: int
     description: str
+
+
+class SearchItem(BaseModel):
+    id: int = None
+    name: str = None
+    price: int = None
+    description: str = None
+
+
+class UpdateItem(BaseModel):
+    id: int
+    name: str = None
+    price: int = None
+    description: str = None
+
+class CreateCategory(BaseModel):
+    name: str
