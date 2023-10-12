@@ -28,3 +28,12 @@ class Token(Base):
     user_id = Column(Integer, ForeignKey('Users.id'))
 
     user = relationship("User", back_populates="tokens")
+
+
+class Item(Base):
+    __tablename__ = 'Items'
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    price = Column(Integer, index=True)
+    description = Column(String, unique=True, index=True)

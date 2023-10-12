@@ -22,3 +22,8 @@ class UpdateUserProfileRequest(BaseModel):
     name: str = None
     surname: str = None
     phone_number: str = None
+
+class Item(BaseModel):
+    name: str
+    price: int
+    description: str

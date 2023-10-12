@@ -1,11 +1,9 @@
 import secrets
-from typing import Dict, Any
 
 import bcrypt
-from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from models import Token, User
+from database.models import Token, User
 
 
 def generate_token():
