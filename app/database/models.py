@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.testing import db
-from sqlalchemy.orm import relationship, Session
+from sqlalchemy.orm import relationship
 from sqlalchemy import BigInteger
 from sqlalchemy.sql import func
 
@@ -19,9 +19,7 @@ class User(Base):
     status = Column(String, default='client')
 
     tokens = relationship("Token", back_populates="user")
-
     cart = relationship("Cart", back_populates="user")
-
 
 class Token(Base):
     __tablename__ = 'Tokens'
@@ -44,7 +42,6 @@ class Item(Base):
     category_id = Column(Integer, ForeignKey('Categories.id'))
 
     category = relationship("Category", back_populates="items")
-
 
 class Category(Base):
     __tablename__ = 'Categories'

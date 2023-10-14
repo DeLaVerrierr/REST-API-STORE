@@ -1,8 +1,4 @@
-from typing import List
-
 from pydantic import BaseModel
-
-
 
 
 class RegisterUserRequest(BaseModel):
@@ -31,8 +27,8 @@ class UpdateUserProfileRequest(BaseModel):
 class CreateItem(BaseModel):
     name: str
     price: int
-    description: str
     quantity: int
+    description: str
     category_id: int
 
 
@@ -41,7 +37,6 @@ class SearchItem(BaseModel):
     name: str = None
     price: int = None
     description: str = None
-    category_id: int = None
 
 
 class UpdateItem(BaseModel):
@@ -50,8 +45,6 @@ class UpdateItem(BaseModel):
     price: int = None
     description: str = None
     quantity: int = None
-    category_id: int = None
-
 
 class CreateCategory(BaseModel):
     name: str
@@ -59,8 +52,9 @@ class CreateCategory(BaseModel):
 
 class CartItemUser(BaseModel):
     item_id: int
-    quantity: int = 1
+    quantity: int
+
 
 class CartitemDelete(BaseModel):
     item_id: int
-    quantity: int = 1
+    quantity: int

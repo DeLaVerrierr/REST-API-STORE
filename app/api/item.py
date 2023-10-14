@@ -12,6 +12,7 @@ from fastapi import APIRouter
 from database.database import get_db
 from fastapi.responses import JSONResponse
 
+
 router = APIRouter()
 
 
@@ -47,7 +48,6 @@ def create_item(item: CreateItem, authorization: str = Header(...), db: Session 
         f'POST /api/v1/store/item/create Item created id:{item_object.id},name:{item.name},price:{item.price},description:{item.description}, category_id:{item.category_id},category_name:{category_name}')
     return response_data
 
-
 @router.put('/update', summary='UpdateItem', response_model=dict, tags=['Item'])
 def update_user_profile(update_data: UpdateItem, authorization: str = Header(...), db: Session = Depends(get_db)):
     """
@@ -65,20 +65,18 @@ def update_user_profile(update_data: UpdateItem, authorization: str = Header(...
 
         update_dict = {field: value for field, value in update_data.dict().items() if value is not None}
 
+        # Обновляем атрибуты объекта
         for field, value in update_dict.items():
             setattr(updated_item, field, value)
 
         db.commit()
-        db.refresh(updated_item)
-        category_name = db.query(Category).filter(Category.id == updated_item.category_id).first().name
+        db.refresh(updated_item)  # Обновляем состояние объекта
+
         return {
             "id": updated_item.id,
             "name": updated_item.name,
             "price": updated_item.price,
-            "description": updated_item.description,
-            "quantity": updated_item.quantity,
-            "category_id": updated_item.category_id,
-            'category_name': category_name
+            "description": updated_item.description
         }
     else:
         raise HTTPException(status_code=404, detail="Item not found")
@@ -104,9 +102,6 @@ def search_item(item: SearchItem, db: Session = Depends(get_db)):
     if item.description is not None:
         query = query.filter(Item.description.ilike(f"%{item.description}%"))
 
-    if item.category_id is not None:  # Добавляем фильтрацию по category_id
-        query = query.filter(Item.category_id == item.category_id)
-
     results = query.all()
 
     if results:
@@ -119,8 +114,8 @@ def search_item(item: SearchItem, db: Session = Depends(get_db)):
             }
             for item in results
         ]
-        filter_used = {attr: getattr(item, attr) for attr in ["id", "name", "price", "description", "category_id"] if
+        filter_used = {attr: getattr(item, attr) for attr in ["id", "name", "price", "description"] if
                        getattr(item, attr) is not None}
-        return JSONResponse(content={"filter": filter_used,"count_items": len(results), "results": results})
+        return JSONResponse(content={"filter": filter_used, "results": results})
 
     return JSONResponse(content={"message": "Item not found"})

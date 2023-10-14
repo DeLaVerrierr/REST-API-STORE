@@ -21,15 +21,6 @@ router = APIRouter()
 #     "password":"li2222"
 # }
 
-# {
-#     "message": "User successfully created",
-#     "id": 5,
-#     "name": "Олег",
-#     "surname": "Дубков",
-#     "phone_number": "+79178878767",
-#     "token": "oc6fH5iMlk2affuja-fOU_sEHqSKXW8mAupY6jSgd64"
-# }
-
 
 @router.post('/create', summary='CreateUser', response_model=dict, tags=['User'])
 def create_user(user: RegisterUserRequest, db: Session = Depends(get_db)):
@@ -71,8 +62,6 @@ def create_user(user: RegisterUserRequest, db: Session = Depends(get_db)):
     return response_data
 
 
-
-
 @router.get('/profile', summary='ProfileUser', response_model=dict, tags=['User'])
 def get_user_profile(authorization: str = Header(...), db: Session = Depends(get_db)):
     """
@@ -85,7 +74,7 @@ def get_user_profile(authorization: str = Header(...), db: Session = Depends(get
 
     if user.cart:
         item_quantities = {}
-        total_price = 0
+        total_price = 0  # Инициализируем общую сумму
 
         for cart in user.cart:
             item_id = cart.item_id
@@ -121,7 +110,6 @@ def get_user_profile(authorization: str = Header(...), db: Session = Depends(get
         "total_price": total_price
     }
     return response_message
-
 
 @router.put('/update-profile', summary='UpdateProfileUser', response_model=dict, tags=['User'])
 def update_user_profile(update_data: UpdateUserProfileRequest, authorization: str = Header(...),

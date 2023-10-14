@@ -1,51 +1,38 @@
-from fastapi import Depends, Header
 from sqlalchemy.orm import Session
-from authentication.security import token_verification, extract_token
-from database.schemas import CartItemUser, CartitemDelete
+from fastapi import Depends, Header, HTTPException
+from authentication.security import hash_password, generate_token, token_verification, extract_token, \
+    check_admin_authorization
 from logger.logger import logger
-from database.models import User, Token, Cart, Item
+from database.models import User, Token, Item, Category, Cart
+from database.schemas import CreateItem, CartitemDelete, CartItemUser
 from fastapi import APIRouter
 from database.database import get_db
-
+from fastapi.responses import JSONResponse
 router = APIRouter()
 
-#Работает
-#
-# {
-#     "name":"TEST2",
-#     "surname":"TEST",
-#     "phone_number":"+79178974996",
-#     "password":"li2222"
-# }
 
-# {
-#     "message": "User successfully created",
-#     "id": 5,
-#     "name": "Олег",
-#     "surname": "Дубков",
-#     "phone_number": "+79178878767",
-#     "token": "oc6fH5iMlk2affuja-fOU_sEHqSKXW8mAupY6jSgd64"
-# }
 
 @router.post('/add', summary='CreateCart', response_model=dict, tags=['Cart'])
 def create_cart_item(item_for_cart: CartItemUser, authorization: str = Header(...), db: Session = Depends(get_db)):
     """
     POST
-    Добавление товара в корзину
+    Add an item to the user's cart
     """
 
     user = token_verification(extract_token(authorization), db)
 
     if user.cart is None:
-        new_cart = Cart(user=user, item_id=item_for_cart.item_id, quantity=item_for_cart.quantity)
-        db.add(new_cart)
+        new_cart = Cart(item_id=item_for_cart.item_id, quantity=item_for_cart.quantity)
+        user.cart = [new_cart]
     else:
-        user.cart.append(Cart(user=user, item_id=item_for_cart.item_id, quantity=item_for_cart.quantity))
+        user.cart.append(Cart(item_id=item_for_cart.item_id, quantity=item_for_cart.quantity))
 
     db.commit()
 
     response_message = {"message": "Item successfully added to the cart"}
     return response_message
+
+
 
 
 
@@ -63,8 +50,10 @@ def delete_cart_item(item: CartitemDelete, authorization: str = Header(...), db:
     # Итерируемся по элементам корзины пользователя
     for cart_item in user.cart:
         if cart_item.item_id == item.item_id and cart_item.quantity == item.quantity:
+            # Если находим совпадение, удаляем элемент из корзины
             db.delete(cart_item)
             db.commit()
             return {'message': 'Товар успешно удален из корзины'}
 
+    # Если совпадения не найдено
     return {'message': 'Товар не найден в корзине'}

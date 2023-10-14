@@ -32,3 +32,7 @@
 2023-10-14 14:45:11,404 - logger.logger - INFO - POST /api/v1/store/item/create Item created id:4,name:Наушники,price:200,description:Наушники высокого качества с технологией активного шумоподавления., category_id:1,category_name:Электронника
 2023-10-14 14:51:21,020 - logger.logger - INFO - POST /api/v1/store/item/create Item created id:1,name:Игровая мышь,price:1500,description:Высокопроизводительная игровая мышь с настраиваемой подсветкой RGB., category_id:1,category_name:Электронника
 2023-10-14 14:52:21,169 - logger.logger - INFO - POST /api/v1/store/item/create Item created id:2,name:Ноутбук,price:1000,description:Мощный ноутбук с высокоразрешающим экраном и быстрым процессором., category_id:1,category_name:Электронника
+2023-10-14 15:28:28,729 - logger.logger - INFO - POST /api/v1/store/user Users created id:1,name:TEST2,surname:TEST,phone_number:+79178974996
+2023-10-14 15:30:03,551 - logger.logger - INFO - POST /api/v1/store/category/create Category created id:1,name:Электронника
+2023-10-14 15:31:51,171 - logger.logger - INFO - POST /api/v1/store/item/create Item created id:1,name:Gaming Mouse,price:1500,description:A high-performance gaming mouse with customizable RGB lighting., category_id:1,category_name:Электронника
+2023-10-14 15:32:13,269 - logger.logger - INFO - POST /api/v1/store/item/create Item created id:2,name:Laptop,price:1000,description:A powerful laptop with a high-resolution display and fast processor., category_id:1,category_name:Электронника
