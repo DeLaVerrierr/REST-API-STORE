@@ -6,7 +6,11 @@ from sqlalchemy import update
 from authentication.security import hash_password, generate_token, token_verification, extract_token, \
     check_admin_authorization
 from logger.logger import logger
+<<<<<<< HEAD
 from database.models import Item, User, Category
+=======
+from database.models import Item, User
+>>>>>>> d9ff64259e0f842043a18d8295d80db83e521859
 from database.schemas import CreateItem, SearchItem, UpdateItem
 from fastapi import APIRouter
 from database.database import get_db
@@ -28,16 +32,25 @@ def create_item(item: CreateItem, authorization: str = Header(...), db: Session 
     if len(item.description) <= 10:
         return JSONResponse(content={"error": "Description length must be more than 10 characters"})
 
+<<<<<<< HEAD
     item_object = Item(name=item.name, price=item.price, description=item.description, category_id=item.category_id)
 
     db.add(item_object)
     db.commit()
     category_name = db.query(Category).filter(Category.id == item.category_id).first().name
+=======
+    item_object = Item(name=item.name, price=item.price, description=item.description)
+
+    db.add(item_object)
+    db.commit()
+
+>>>>>>> d9ff64259e0f842043a18d8295d80db83e521859
     response_data = {
         "message": "Item successfully created",
         'id': item_object.id,
         'name': item.name,
         'price': item.price,
+<<<<<<< HEAD
         'description': item.description,
         "quantity": item.quantity,
         'category_id': item.category_id,
@@ -48,6 +61,16 @@ def create_item(item: CreateItem, authorization: str = Header(...), db: Session 
         f'POST /api/v1/store/item/create Item created id:{item_object.id},name:{item.name},price:{item.price},description:{item.description}, category_id:{item.category_id},category_name:{category_name}')
     return response_data
 
+=======
+        'description': item.description
+    }
+
+    logger.info(
+        f'POST /api/v1/store/item/create Item created id:{item_object.id},name:{item.name},price:{item.price},description:{item.description}')
+    return response_data
+
+
+>>>>>>> d9ff64259e0f842043a18d8295d80db83e521859
 @router.put('/update', summary='UpdateItem', response_model=dict, tags=['Item'])
 def update_user_profile(update_data: UpdateItem, authorization: str = Header(...), db: Session = Depends(get_db)):
     """
