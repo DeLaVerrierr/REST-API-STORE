@@ -118,11 +118,12 @@ def search_item(item: SearchItem, db: Session = Depends(get_db)):
                 "id": item.id,
                 "name": item.name,
                 "price": item.price,
-                "description": item.description
+                "description": item.description,
+                "quantity": item.quantity
             }
             for item in results
         ]
-        filter_used = {attr: getattr(item, attr) for attr in ["id", "name", "price", "description"] if
+        filter_used = {attr: getattr(item, attr) for attr in ["id", "name", "price", "description","quantity"] if
                        getattr(item, attr) is not None}
         return JSONResponse(content={"filter": filter_used, "results": results})
 
