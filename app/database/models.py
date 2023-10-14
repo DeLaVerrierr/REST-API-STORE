@@ -19,7 +19,7 @@ class User(Base):
     status = Column(String, default='client')
 
     tokens = relationship("Token", back_populates="user")
-
+    cart = relationship("Cart", back_populates="user")
 
 class Token(Base):
     __tablename__ = 'Tokens'
@@ -38,6 +38,7 @@ class Item(Base):
     name = Column(String, unique=True, index=True)
     price = Column(Integer, index=True)
     description = Column(String, unique=True, index=True)
+    quantity = Column(Integer,index=True)
     category_id = Column(Integer, ForeignKey('Categories.id'))
 
     category = relationship("Category", back_populates="items")
@@ -49,3 +50,20 @@ class Category(Base):
     name = Column(String, unique=True, index=True)
 
     items = relationship("Item", back_populates="category")
+
+
+class Cart(Base):
+    __tablename__ = "Carts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("Users.id"))
+    item_id = Column(Integer, index=True)
+    quantity = Column(Integer, index=True, default=1)
+
+    user = relationship("User", back_populates="cart")
+
+
+
+
+
+

@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 from pydantic import BaseModel
 
 
@@ -27,7 +34,9 @@ class UpdateUserProfileRequest(BaseModel):
 class CreateItem(BaseModel):
     name: str
     price: int
+    quantity: int
     description: str
+    category_id: int
 
 
 class SearchItem(BaseModel):
@@ -42,6 +51,19 @@ class UpdateItem(BaseModel):
     name: str = None
     price: int = None
     description: str = None
+    quantity: int = None
 
 class CreateCategory(BaseModel):
     name: str
+
+
+class CartItemUser(BaseModel):
+    item_id: int
+    quantity: int
+
+
+class CartitemDelete(BaseModel):
+    item_id: int
+    quantity: int
+
+
