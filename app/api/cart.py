@@ -3,7 +3,7 @@ from fastapi import Depends, Header, HTTPException
 from authentication.security import hash_password, generate_token, token_verification, extract_token, \
     check_admin_authorization
 from logger.logger import logger
-from database.models import User, Token, Item, Category, Cart
+from database.models import Cart
 from database.schemas import CreateItem, CartitemDelete, CartItemUser
 from fastapi import APIRouter
 from database.database import get_db

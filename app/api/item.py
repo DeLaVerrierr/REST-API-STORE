@@ -28,33 +28,29 @@ def create_item(item: CreateItem, authorization: str = Header(...), db: Session 
     if len(item.description) <= 10:
         return JSONResponse(content={"error": "Description length must be more than 10 characters"})
 
-    user = token_verification(extract_token(authorization), db)
-    for cart_item in user.cart:
-        if cart_item.item_id == item.id:
-            cart_item.quantity += item.quantity
-            db.commit()
-            return {"message": "Item quantity updated in the cart"}
+    # Создайте объект товара
+    item_object = Item(name=item.name, price=item.price, description=item.description, category_id=item.category_id, quantity=item.quantity)
 
-    item_object = Item(name=item.name, price=item.price, description=item.description, category_id=item.category_id)
-    cart_item = Cart(user=user, item=item_object, quantity=item.quantity)
-
-    db.add(cart_item)
+    # Сохраните товар в базе данных
+    db.add(item_object)
     db.commit()
+
     category_name = db.query(Category).filter(Category.id == item.category_id).first().name
     response_data = {
-        "message": "Item successfully created in the cart",
+        "message": "Item successfully created",
         'id': item_object.id,
         'name': item.name,
         'price': item.price,
         'description': item.description,
-        "quantity": item.quantity,
+        'quantity': item.quantity,
         'category_id': item.category_id,
         'category_name': category_name
     }
 
     logger.info(
-        f'POST /api/v1/store/item/create Item created id:{item_object.id},name:{item.name},price:{item.price},description:{item.description}, category_id:{item.category_id},category_name:{category_name}')
+        f'POST /api/v1/store/item/create Item created id:{item_object.id},name:{item.name},price:{item.price},description:{item.description}, category_id:{item.category_id},quantity:{item.quantity},category_name:{category_name}')
     return response_data
+
 
 @router.put('/update', summary='UpdateItem', response_model=dict, tags=['Item'])
 def update_user_profile(update_data: UpdateItem, authorization: str = Header(...), db: Session = Depends(get_db)):
@@ -118,12 +114,11 @@ def search_item(item: SearchItem, db: Session = Depends(get_db)):
                 "id": item.id,
                 "name": item.name,
                 "price": item.price,
-                "description": item.description,
-                "quantity": item.quantity
+                "description": item.description
             }
             for item in results
         ]
-        filter_used = {attr: getattr(item, attr) for attr in ["id", "name", "price", "description","quantity"] if
+        filter_used = {attr: getattr(item, attr) for attr in ["id", "name", "price", "description"] if
                        getattr(item, attr) is not None}
         return JSONResponse(content={"filter": filter_used, "results": results})
 

@@ -1,2 +1,8 @@
 2023-10-11 18:17:45,876 - main - INFO - POST /api/v1/store/user Users created id:1,name:Amir,surname:Garaev,phone_number:+79178974996
 2023-10-12 12:28:02,944 - logger.logger - INFO - POST /api/v1/store/user Users created id:3,name:TEST,surname:TEST,phone_number:+79178974996
+2023-10-14 15:54:00,363 - logger.logger - INFO - POST /api/v1/store/user Users created id:2,name:TEST2,surname:TEST,phone_number:+79178974996
+2023-10-14 15:56:15,137 - logger.logger - INFO - POST /api/v1/store/category/create Category created id:2,name:Электронника
+2023-10-14 16:03:00,451 - logger.logger - INFO - POST /api/v1/store/item/create Item created id:3,name:Игровая мышь,price:1500,description:Высокопроизводительная игровая мышь с настраиваемой подсветкой RGB., category_id:2,category_name:Электронника
+2023-10-14 16:03:21,023 - logger.logger - INFO - POST /api/v1/store/item/create Item created id:5,name:Клваваав,price:1254,description:Высокопроиваываываытраиваемой подсветкой RGB., category_id:2,category_name:Электронника
+2023-10-14 16:05:51,733 - logger.logger - INFO - POST /api/v1/store/item/create Item created id:6,name:Мышка,price:1254,description:Высокопроизводительная игровая мышь с настраиваемой подсветкой RGB., category_id:2,quantity:13,category_name:Электронника
+2023-10-14 16:06:04,543 - logger.logger - INFO - POST /api/v1/store/item/create Item created id:7,name:клва,price:121234,description:Высвыавыавыавыавыавы, category_id:2,quantity:53,category_name:Электронника
