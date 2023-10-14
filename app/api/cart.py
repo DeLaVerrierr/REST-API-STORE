@@ -16,7 +16,7 @@ router = APIRouter()
 def create_cart_item(item_for_cart: CartItemUser, authorization: str = Header(...), db: Session = Depends(get_db)):
     """
     POST
-    Add an item to the user's cart
+    Добалвение в корзину
     """
 
     user = token_verification(extract_token(authorization), db)
