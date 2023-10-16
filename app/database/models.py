@@ -1,8 +1,6 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.testing import db
 from sqlalchemy.orm import relationship
-from sqlalchemy import BigInteger
 from sqlalchemy.sql import func
 
 Base = declarative_base()
@@ -63,7 +61,11 @@ class Cart(Base):
     user = relationship("User", back_populates="cart")
 
 
-
-
-
-
+class Order(Base):
+    __tablename__ = "Orders"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("Users.id"))
+    status = Column(String, index=True, default='in process')
+    created_at = Column(DateTime, default=func.now())
+    cart_items = Column(Text)
+    total_price = Column(Integer, default=0)

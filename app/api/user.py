@@ -5,21 +5,13 @@ from sqlalchemy.orm import Session
 
 from authentication.security import hash_password, generate_token, token_verification, extract_token
 from logger.logger import logger
-from database.models import User, Token, Item
+from database.models import User, Token
 from database.schemas import RegisterUserRequest, UpdateUserProfileRequest
 from fastapi import APIRouter
 from database.database import get_db
-
+from tools.funcc import calculate_total_cart_price
 router = APIRouter()
 
-#Работает
-
-# {
-#     "name":"TEST2",
-#     "surname":"TEST",
-#     "phone_number":"+79178974996",
-#     "password":"li2222"
-# }
 
 
 @router.post('/create', summary='CreateUser', response_model=dict, tags=['User'])
@@ -31,7 +23,7 @@ def create_user(user: RegisterUserRequest, db: Session = Depends(get_db)):
     pattern_phone_number = r'\+7\d{10}'
     # Проверка на корректность телефона
     if not re.match(pattern_phone_number, user.phone_number):
-        return "error phone_number: ru format +71234567890"
+        return "Ошибка: номер телефона должен быть в формате +71234567890"
 
     # Хэшируем пароль
     hashed_password = hash_password(user.password)
@@ -49,7 +41,7 @@ def create_user(user: RegisterUserRequest, db: Session = Depends(get_db)):
     user_id = user_object.id
 
     response_data = {
-        "message": "User successfully created",
+        "message": "Пользователь успешно зарегистрирован",
         "id": user_id,
         "name": user.name,
         "surname": user.surname,
@@ -69,37 +61,7 @@ def get_user_profile(authorization: str = Header(...), db: Session = Depends(get
     Профиль пользователя
     """
     user = token_verification(extract_token(authorization), db)
-
-    cart_items = []
-
-    if user.cart:
-        item_quantities = {}
-        total_price = 0  # Инициализируем общую сумму
-
-        for cart in user.cart:
-            item_id = cart.item_id
-
-            if item_id in item_quantities:
-                item_quantities[item_id] += cart.quantity
-            else:
-                item_quantities[item_id] = cart.quantity
-
-        for item_id, quantity in item_quantities.items():
-            item = (
-                db.query(Item)
-                .filter(Item.id == item_id)
-                .first()
-            )
-            if item:
-                item_info = {
-                    "item_id": item_id,
-                    "quantity": quantity,
-                    "name": item.name,
-                    "price": item.price
-                }
-                cart_items.append(item_info)
-
-                total_price += item.price * quantity
+    cart_items, total_price = calculate_total_cart_price(user, db)
 
     response_message = {
         "id": user.id,
@@ -129,4 +91,4 @@ def update_user_profile(update_data: UpdateUserProfileRequest, authorization: st
 
     db.commit()
 
-    return {'message': 'Profile updated successfully'}
+    return {'message': 'Профиль успешно обновлен'}

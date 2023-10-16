@@ -1,14 +1,12 @@
-from fastapi import Depends, Header, HTTPException
+from fastapi import Depends, Header
 from sqlalchemy.orm import Session
-from sqlalchemy import update
-from authentication.security import hash_password, generate_token, token_verification, extract_token, \
-    check_admin_authorization
+from authentication.security import check_admin_authorization
 from logger.logger import logger
-from database.models import Item, User, Category
+from database.models import Category
 from database.schemas import CreateCategory
 from fastapi import APIRouter
 from database.database import get_db
-from fastapi.responses import JSONResponse
+
 
 
 router = APIRouter()

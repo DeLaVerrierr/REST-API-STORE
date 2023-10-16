@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 from pydantic import BaseModel
 
 
@@ -53,6 +46,7 @@ class UpdateItem(BaseModel):
     description: str = None
     quantity: int = None
 
+
 class CreateCategory(BaseModel):
     name: str
 
@@ -67,3 +61,6 @@ class CartitemDelete(BaseModel):
     quantity: int
 
 
+class ChangeStatus(BaseModel):
+    order_id: int
+    new_status: str

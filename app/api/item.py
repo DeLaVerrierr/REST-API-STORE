@@ -28,10 +28,8 @@ def create_item(item: CreateItem, authorization: str = Header(...), db: Session 
     if len(item.description) <= 10:
         return JSONResponse(content={"error": "Description length must be more than 10 characters"})
 
-    # Создайте объект товара
     item_object = Item(name=item.name, price=item.price, description=item.description, category_id=item.category_id, quantity=item.quantity)
 
-    # Сохраните товар в базе данных
     db.add(item_object)
     db.commit()
 
@@ -54,13 +52,9 @@ def create_item(item: CreateItem, authorization: str = Header(...), db: Session 
 
 @router.put('/update', summary='UpdateItem', response_model=dict, tags=['Item'])
 def update_user_profile(update_data: UpdateItem, authorization: str = Header(...), db: Session = Depends(get_db)):
-    """
-    PUT
-    изменение Item
-    """
+
     check_admin_authorization(authorization, db)
 
-    # Получаем обновленный объект
     updated_item = db.query(Item).filter(Item.id == update_data.id).first()
 
     if updated_item:
@@ -69,18 +63,29 @@ def update_user_profile(update_data: UpdateItem, authorization: str = Header(...
 
         update_dict = {field: value for field, value in update_data.dict().items() if value is not None}
 
-        # Обновляем атрибуты объекта
+        changes = {}
+
         for field, value in update_dict.items():
+            old_value = getattr(updated_item, field)
             setattr(updated_item, field, value)
 
+            if old_value != value:
+                changes[field] = {"old_value": old_value, "new_value": value}
+
         db.commit()
-        db.refresh(updated_item)  # Обновляем состояние объекта
+        db.refresh(updated_item)
+
+        if changes:
+            logger.info(
+                f'PUT /api/v1/store/item/update Item change: Item ID:{updated_item.id}, Changes:{changes}'
+            )
 
         return {
             "id": updated_item.id,
             "name": updated_item.name,
             "price": updated_item.price,
-            "description": updated_item.description
+            "description": updated_item.description,
+            "changes": changes
         }
     else:
         raise HTTPException(status_code=404, detail="Item not found")

@@ -1,13 +1,10 @@
 from sqlalchemy.orm import Session
-from fastapi import Depends, Header, HTTPException
-from authentication.security import hash_password, generate_token, token_verification, extract_token, \
-    check_admin_authorization
-from logger.logger import logger
+from fastapi import Depends, Header
+from authentication.security import token_verification, extract_token
 from database.models import Cart
-from database.schemas import CreateItem, CartitemDelete, CartItemUser
+from database.schemas import CartitemDelete, CartItemUser
 from fastapi import APIRouter
 from database.database import get_db
-from fastapi.responses import JSONResponse
 router = APIRouter()
 
 
@@ -50,10 +47,8 @@ def delete_cart_item(item: CartitemDelete, authorization: str = Header(...), db:
     # Итерируемся по элементам корзины пользователя
     for cart_item in user.cart:
         if cart_item.item_id == item.item_id and cart_item.quantity == item.quantity:
-            # Если находим совпадение, удаляем элемент из корзины
             db.delete(cart_item)
             db.commit()
             return {'message': 'Товар успешно удален из корзины'}
 
-    # Если совпадения не найдено
     return {'message': 'Товар не найден в корзине'}
