@@ -6,3 +6,14 @@
 2023-10-14 16:03:21,023 - logger.logger - INFO - POST /api/v1/store/item/create Item created id:5,name:Клваваав,price:1254,description:Высокопроиваываываытраиваемой подсветкой RGB., category_id:2,category_name:Электронника
 2023-10-14 16:05:51,733 - logger.logger - INFO - POST /api/v1/store/item/create Item created id:6,name:Мышка,price:1254,description:Высокопроизводительная игровая мышь с настраиваемой подсветкой RGB., category_id:2,quantity:13,category_name:Электронника
 2023-10-14 16:06:04,543 - logger.logger - INFO - POST /api/v1/store/item/create Item created id:7,name:клва,price:121234,description:Высвыавыавыавыавыавы, category_id:2,quantity:53,category_name:Электронника
+2023-10-16 18:31:37,078 - logger.logger - INFO - POST /api/v1/store/user Users created id:3,name:'; DROP TABLE users; --,surname:dsfsdf,phone_number:+78435674834
+2023-10-16 19:40:39,110 - logger.logger - INFO - DELETE /api/v1/store/item/delete Item delete: Item ID:6
+2023-10-16 20:20:03,758 - logger.logger - INFO - POST /api/v1/store/category/create Category created id:3,name:FFFFDF
+2023-10-16 20:22:42,815 - logger.logger - INFO - DELETE /api/v1/store/category/delete Category delete: Category ID:3, Name:FFFFDF
+2023-10-16 20:57:35,524 - logger.logger - INFO - POST /api/v1/store/user Users created id:4,name:TESTname,surname:TESTsurname,phone_number:+71234567890
+2023-10-16 21:16:31,465 - logger.logger - INFO - POST /api/v1/store/user Users created id:5,name:TESTname,surname:TESTsurname,phone_number:+71234567890
+2023-10-16 21:20:46,538 - logger.logger - INFO - POST /api/v1/store/user Users created id:6,name:TESTname,surname:TESTsurname,phone_number:+71234567890
+2023-10-16 21:25:16,710 - logger.logger - INFO - POST /api/v1/store/user Users created id:7,name:TESTname,surname:TESTsurname,phone_number:+71234567890
+2023-10-16 21:28:05,758 - logger.logger - INFO - POST /api/v1/store/user Users created id:8,name:TESTname,surname:TESTsurname,phone_number:+71234567890
+2023-10-16 21:29:30,641 - logger.logger - INFO - POST /api/v1/store/user Users created id:9,name:TESTname,surname:TESTsurname,phone_number:+71234567890
+2023-10-16 21:31:44,569 - logger.logger - INFO - POST /api/v1/store/user Users created id:10,name:TESTname,surname:TESTsurname,phone_number:+71234567890

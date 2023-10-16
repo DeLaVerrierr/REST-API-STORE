@@ -1,6 +1,6 @@
 import re
 
-from fastapi import Depends, Header
+from fastapi import Depends, Header, HTTPException
 from sqlalchemy.orm import Session
 
 from authentication.security import hash_password, generate_token, token_verification, extract_token
@@ -14,7 +14,7 @@ router = APIRouter()
 
 
 
-@router.post('/create', summary='CreateUser', response_model=dict, tags=['User'])
+@router.post('/create', summary='CreateUser', response_model=dict)
 def create_user(user: RegisterUserRequest, db: Session = Depends(get_db)):
     """
     POST
@@ -23,7 +23,7 @@ def create_user(user: RegisterUserRequest, db: Session = Depends(get_db)):
     pattern_phone_number = r'\+7\d{10}'
     # Проверка на корректность телефона
     if not re.match(pattern_phone_number, user.phone_number):
-        return "Ошибка: номер телефона должен быть в формате +71234567890"
+        raise HTTPException(status_code=400, detail="Ошибка: номер телефона должен быть в формате +71234567890")
 
     # Хэшируем пароль
     hashed_password = hash_password(user.password)
@@ -54,7 +54,7 @@ def create_user(user: RegisterUserRequest, db: Session = Depends(get_db)):
     return response_data
 
 
-@router.get('/profile', summary='ProfileUser', response_model=dict, tags=['User'])
+@router.get('/profile', summary='ProfileUser', response_model=dict)
 def get_user_profile(authorization: str = Header(...), db: Session = Depends(get_db)):
     """
     GET
@@ -73,7 +73,7 @@ def get_user_profile(authorization: str = Header(...), db: Session = Depends(get
     }
     return response_message
 
-@router.put('/update-profile', summary='UpdateProfileUser', response_model=dict, tags=['User'])
+@router.put('/update-profile', summary='UpdateProfileUser', response_model=dict)
 def update_user_profile(update_data: UpdateUserProfileRequest, authorization: str = Header(...),
                         db: Session = Depends(get_db)):
     """

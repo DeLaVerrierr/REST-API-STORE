@@ -7,7 +7,7 @@ from authentication.security import hash_password, generate_token, token_verific
 from logger.logger import logger
 from database.models import Item, User, Category, Cart
 from database.models import Item, User
-from database.schemas import CreateItem, SearchItem, UpdateItem
+from database.schemas import CreateItem, SearchItem, UpdateItem, DeleteItem
 from fastapi import APIRouter
 from database.database import get_db
 from fastapi.responses import JSONResponse
@@ -16,7 +16,7 @@ from fastapi.responses import JSONResponse
 router = APIRouter()
 
 
-@router.post('/create', summary='CreateItem', response_model=dict, tags=['Item'])
+@router.post('/create', summary='CreateItem', response_model=dict)
 def create_item(item: CreateItem, authorization: str = Header(...), db: Session = Depends(get_db)):
     """
     POST
@@ -26,7 +26,7 @@ def create_item(item: CreateItem, authorization: str = Header(...), db: Session 
     check_admin_authorization(authorization, db)
 
     if len(item.description) <= 10:
-        return JSONResponse(content={"error": "Description length must be more than 10 characters"})
+        return JSONResponse(content={"error": "Длина описания должна быть более 10 символов"})
 
     item_object = Item(name=item.name, price=item.price, description=item.description, category_id=item.category_id, quantity=item.quantity)
 
@@ -50,7 +50,7 @@ def create_item(item: CreateItem, authorization: str = Header(...), db: Session 
     return response_data
 
 
-@router.put('/update', summary='UpdateItem', response_model=dict, tags=['Item'])
+@router.put('/update', summary='UpdateItem', response_model=dict)
 def update_user_profile(update_data: UpdateItem, authorization: str = Header(...), db: Session = Depends(get_db)):
 
     check_admin_authorization(authorization, db)
@@ -59,7 +59,7 @@ def update_user_profile(update_data: UpdateItem, authorization: str = Header(...
 
     if updated_item:
         if update_data.description and len(update_data.description) <= 10:
-            return JSONResponse(content={"error": "Description length must be more than 10 characters"})
+            return JSONResponse(content={"error": "Длина описания должна быть более 10 символов"})
 
         update_dict = {field: value for field, value in update_data.dict().items() if value is not None}
 
@@ -91,7 +91,7 @@ def update_user_profile(update_data: UpdateItem, authorization: str = Header(...
         raise HTTPException(status_code=404, detail="Item not found")
 
 
-@router.post('/search', summary='SearchItem', response_model=dict, tags=['Item'])
+@router.post('/search', summary='SearchItem', response_model=dict)
 def search_item(item: SearchItem, db: Session = Depends(get_db)):
     """
     POST
@@ -127,4 +127,23 @@ def search_item(item: SearchItem, db: Session = Depends(get_db)):
                        getattr(item, attr) is not None}
         return JSONResponse(content={"filter": filter_used, "results": results})
 
-    return JSONResponse(content={"message": "Item not found"})
+    return JSONResponse(content={"message": "Товар не найден"})
+
+
+@router.delete("/delete", summary='DeleteItem', response_model=dict)
+def delete_item(item: DeleteItem, authorization: str = Header(...), db: Session = Depends(get_db)):
+    delete_item = db.query(Item).filter(Item.id == item.item_id).first()
+
+    check_admin_authorization(authorization, db)
+
+    if delete_item:
+        db.delete(delete_item)
+        db.commit()
+
+        logger.info(
+            f'DELETE /api/v1/store/item/delete Item delete: Item ID:{item.item_id}'
+        )
+
+        return {'message': 'Товар удален успешно'}
+    else:
+        return {'message': 'Товар не найден'}

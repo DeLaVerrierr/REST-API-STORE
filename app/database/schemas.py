@@ -32,6 +32,10 @@ class CreateItem(BaseModel):
     category_id: int
 
 
+class DeleteItem(BaseModel):
+    item_id: int
+
+
 class SearchItem(BaseModel):
     id: int = None
     name: str = None
@@ -48,6 +52,16 @@ class UpdateItem(BaseModel):
 
 
 class CreateCategory(BaseModel):
+    name: str
+
+
+class ChangeNameCategory(BaseModel):
+    category_id: int
+    new_name: str
+
+
+class DeleteCategory(BaseModel):
+    category_id: int
     name: str
 
 

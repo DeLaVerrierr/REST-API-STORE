@@ -4,7 +4,7 @@ from fastapi import Depends, Header, Query
 from sqlalchemy.orm import Session
 
 from authentication.security import token_verification, extract_token, check_admin_authorization
-from database.models import Order
+from database.models import Order, Item
 from fastapi import APIRouter
 from database.database import get_db
 from tools.funcc import calculate_total_cart_price
@@ -13,7 +13,7 @@ from logger.logger import logger
 router = APIRouter()
 
 
-@router.get('/create', summary='CreateOrder', response_model=dict, tags=['Order'])
+@router.get('/create', summary='CreateOrder', response_model=dict)
 def create_order_for_cart(authorization: str = Header(...), db: Session = Depends(get_db)):
     """
     GET
@@ -42,7 +42,7 @@ def create_order_for_cart(authorization: str = Header(...), db: Session = Depend
 
 
 
-@router.post('/change-status', summary='ChangeStatusOrder', response_model=dict, tags=['Order'])
+@router.post('/change-status', summary='ChangeStatusOrder', response_model=dict)
 def change_status(change_status: ChangeStatus, authorization: str = Header(...), db: Session = Depends(get_db)):
     """
     POST
@@ -78,7 +78,7 @@ def change_status(change_status: ChangeStatus, authorization: str = Header(...),
         return {"message": "Заказ не найден."}
 
 #http://127.0.0.1:8000/api/v1/store/user/cart/order/search?q={status}
-@router.get("/search", summary='SearchOrder', response_model=dict, tags=['Order'])
+@router.get("/search", summary='SearchOrder', response_model=dict)
 def search_order(q: str = Query(..., description="Статус заказа для поиска"), authorization: str = Header(...),
                  db: Session = Depends(get_db)):
     """
@@ -105,3 +105,53 @@ def search_order(q: str = Query(..., description="Статус заказа дл
         order_list.append(order_dict)
 
     return {"message": "Заказы с указанным статусом найдены:", "orders": order_list}
+
+
+
+@router.get('/my-order', summary='ViewOrder', response_model=dict)
+def view_order(authorization: str = Header(...), db: Session = Depends(get_db)):
+    """
+    GET
+    Просмотр заказов пользователя
+    """
+
+    user = token_verification(extract_token(authorization), db)
+
+    order_objects = db.query(Order).filter(Order.user_id == user.id).all()
+
+    if order_objects:
+        response_message = []
+        for order_object in order_objects:
+            items_info = []
+
+            for cart_item in order_object.cart_items.split(','):
+
+                item_id = None
+
+                for item_info in cart_item.split(','):
+                    if "item_id" in item_info:
+                        item_id = item_info.split(":")[1].strip()
+
+                if item_id:
+                    item = db.query(Item).filter(Item.id == item_id).first()
+                    if item:
+                        item_info = {
+                            "Item ID": item.id,
+                            "Name": item.name,
+                            "Price": item.price,
+                            "Description": item.description
+                        }
+                        items_info.append(item_info)
+
+            order_info = {
+                "Order ID": order_object.id,
+                "Status": order_object.status,
+                "Created_at": order_object.created_at,
+                "Items": items_info,
+                "Total price": order_object.total_price
+            }
+            response_message.append(order_info)
+
+        return {"message": "Ваши заказы", "orders": response_message}
+    else:
+        return {"message": "У вас нет заказов"}

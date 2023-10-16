@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 
-@router.post('/add', summary='CreateCart', response_model=dict, tags=['Cart'])
+@router.post('/add', summary='CreateCart', response_model=dict)
 def create_cart_item(item_for_cart: CartItemUser, authorization: str = Header(...), db: Session = Depends(get_db)):
     """
     POST
@@ -33,7 +33,7 @@ def create_cart_item(item_for_cart: CartItemUser, authorization: str = Header(..
 
 
 
-@router.delete('/delete', summary="DeleteItemCart", response_model=dict, tags=['Cart'])
+@router.delete('/delete', summary="DeleteItemCart", response_model=dict)
 def delete_cart_item(item: CartitemDelete, authorization: str = Header(...), db: Session = Depends(get_db)):
     """
     Delete
