@@ -17,3 +17,4 @@
 2023-10-16 21:28:05,758 - logger.logger - INFO - POST /api/v1/store/user Users created id:8,name:TESTname,surname:TESTsurname,phone_number:+71234567890
 2023-10-16 21:29:30,641 - logger.logger - INFO - POST /api/v1/store/user Users created id:9,name:TESTname,surname:TESTsurname,phone_number:+71234567890
 2023-10-16 21:31:44,569 - logger.logger - INFO - POST /api/v1/store/user Users created id:10,name:TESTname,surname:TESTsurname,phone_number:+71234567890
+2023-10-17 09:27:10,380 - logger.logger - INFO - POST /api/v1/store/user Users created id:11,name:TESTname,surname:TESTsurname,phone_number:+71234567890
