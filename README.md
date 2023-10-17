@@ -1,6 +1,5 @@
 ## REST API интернет магазина
-Хотел освоить после drf fastapi и его restapi и написал интернет магазин
-
+Я решил освоить FastAPI после опыта с Django REST framework (DRF) и создал свой REST API для Интернет-магазина
 ## Стэк:
  - Python
  - FastAPI
