@@ -78,3 +78,9 @@ class CartitemDelete(BaseModel):
 class ChangeStatus(BaseModel):
     order_id: int
     new_status: str
+
+
+
+class UserJWT(BaseModel):
+    name: str
+    surname: str

@@ -5,3 +5,4 @@ psycopg2==2.9.9
 bcrypt==4.0.1
 pytest==7.4.2
 h11==0.14.0
+PyJWT==2.8.0
